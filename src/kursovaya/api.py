@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from typing import Any, Dict, List
+
 import requests
 
 
@@ -9,7 +11,7 @@ class JobAPI(ABC):
     """
 
     @abstractmethod
-    def get_vacancies(self, query: str) -> list:
+    def get_vacancies(self, query: str) -> List[Dict[str, Any]]:
         """
         Получить вакансии по поисковому запросу.
 
@@ -25,10 +27,10 @@ class HeadHunterAPI(JobAPI):
     """
 
     def __init__(self, base_url: str = "https://api.hh.ru"):
-        self.base_url = base_url
-        self.vacancies_url = f"{self.base_url}/vacancies"
+        self._base_url = base_url
+        self._vacancies_url = f"{self._base_url}/vacancies"
 
-    def get_vacancies(self, query: str, per_page: int = 20) -> list:
+    def get_vacancies(self, query: str, per_page: int = 20) -> List[Dict[str, Any]]:
         """
         Получить вакансии с hh.ru по запросу.
 
@@ -36,19 +38,28 @@ class HeadHunterAPI(JobAPI):
         :param per_page: количество вакансий на странице (макс. 100)
         :return: список вакансий в формате JSON
         """
-        params = {
+        params: Dict[str, Any] = {
             "text": query,
             "area": 113,  # Россия
-            "per_page": per_page
+            "per_page": per_page,
         }
 
         try:
-            response = requests.get(self.vacancies_url, params=params, timeout=10)
+            response = self._request(self._vacancies_url, params)
             if response.status_code == 200:
-                return response.json().get("items", [])
+                data = response.json()
+                items: List[Dict[str, Any]] = data.get("items", [])
+                return items
             else:
                 print(f"Ошибка при запросе к HH.ru: {response.status_code}")
                 return []
         except requests.RequestException as e:
             print(f"Ошибка подключения к HH.ru: {e}")
             return []
+
+    @staticmethod
+    def _request(url: str, params: Dict[str, Any]) -> requests.Response:
+        """
+        Приватный статический метод для отправки GET-запроса.
+        """
+        return requests.get(url, params=params, timeout=10)

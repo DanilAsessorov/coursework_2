@@ -1,8 +1,11 @@
 from typing import List
+
 from .vacancy import Vacancy
 
 
-def filter_vacancies(vacancies: List[Vacancy], filter_words: List[str]) -> List[Vacancy]:
+def filter_vacancies(
+    vacancies: List[Vacancy], filter_words: List[str]
+) -> List[Vacancy]:
     """
     Фильтрует вакансии по ключевым словам в названии или описании.
 
@@ -24,7 +27,9 @@ def filter_vacancies(vacancies: List[Vacancy], filter_words: List[str]) -> List[
     return filtered
 
 
-def get_vacancies_by_salary(vacancies: List[Vacancy], salary_range: str) -> List[Vacancy]:
+def get_vacancies_by_salary(
+    vacancies: List[Vacancy], salary_range: str
+) -> List[Vacancy]:
     """
     Фильтрует вакансии по диапазону зарплат.
 
@@ -39,7 +44,7 @@ def get_vacancies_by_salary(vacancies: List[Vacancy], salary_range: str) -> List
         parts = salary_range.replace(" ", "").split("-")
         if len(parts) == 1:
             min_salary = int(parts[0])
-            max_salary = float('inf')
+            max_salary = float("inf")
         else:
             min_salary = int(parts[0])
             max_salary = int(parts[1])
@@ -53,7 +58,9 @@ def get_vacancies_by_salary(vacancies: List[Vacancy], salary_range: str) -> List
         return result
 
     except (ValueError, IndexError):
-        print("Некорректный формат диапазона зарплат. Используйте формат: 100000 - 150000")
+        print(
+            "Некорректный формат диапазона зарплат. Используйте формат: 100000 - 150000"
+        )
         return vacancies
 
 

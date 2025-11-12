@@ -1,9 +1,10 @@
-from unittest.mock import patch
+from unittest.mock import Mock, patch
+
 from src.kursovaya.api import HeadHunterAPI
 
 
 @patch("src.kursovaya.api.requests.get")
-def test_headhunter_api_get_vacancies(mock_get):
+def test_headhunter_api_get_vacancies(mock_get: Mock) -> None:
     """Тест получения вакансий с моком."""
     # Подготовка
     mock_get.return_value.status_code = 200
@@ -13,7 +14,7 @@ def test_headhunter_api_get_vacancies(mock_get):
                 "name": "Python Dev",
                 "alternate_url": "https://hh.ru/123",
                 "salary": {"from": 100000, "to": 150000, "currency": "RUR"},
-                "snippet": {"requirement": "Опыт от 3 лет"}
+                "snippet": {"requirement": "Опыт от 3 лет"},
             }
         ]
     }
